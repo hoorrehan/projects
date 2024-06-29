@@ -1,13 +1,9 @@
 {
-  "name": "lets_your_word_counter",
-  "version": "2.0.0",
+  "name": "question15",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
-  "publishConfig": {
-    "access": "public"
-  },
-  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +15,7 @@
     "@types/node": "^20.12.7"
   },
   "dependencies": {
-    "inquirer": "^8.0.0"
+    "date-fns": "^3.6.0",
+    "inquirer": "^9.2.23"
   }
 }
