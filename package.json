@@ -1,9 +1,10 @@
 {
-  "name": "question15",
+  "name": "student_management_program000",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is cli based application",
   "main": "index.js",
   "type": "module",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +16,6 @@
     "@types/node": "^20.12.7"
   },
   "dependencies": {
-    "date-fns": "^3.6.0",
-    "inquirer": "^9.2.23"
+    "inquirer": "^9.2.22"
   }
 }

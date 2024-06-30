@@ -1,111 +1,135 @@
-import inquirer from "inquirer";
+#! /usr/bin/env node
 
-//---games variable---
+import inquirer from "inquirer"
 
-let enemies = ["Skeleton" , "Zombie" , "Warrior" , " assassin"]
-let maxEnemyHealth = 75
-let enemyAttackDamageToHero = 25
+class student {
+    id: string;
+    name:string;
+    courseEnrolled: string[];
+    feesAmount: number
 
-//---player variable---
-
-let heroHealth = 100
-let heroAttackDamageToEnemy = 50
-let numHealthPotion = 3
-let healthPotionHealAmount = 30
-let heathPotionDropChance = 70
-
-//---While loop condition---
-
-let gameRunning = true
-
-console.log("Wellcome to Deadzone!");
-
-Game:
-while(gameRunning){
-    let enemyHealth = Math.floor(Math.random() * maxEnemyHealth + 1)
-    let enemyIndex = Math.floor(Math.random() * enemies.length)
-    let enemy = enemies[enemyIndex]
-
-    console.log(`# ${enemy} has appeared #\n`);
-    
-    while(enemyHealth > 0){
-        console.log(`Your Health ${heroHealth}`);
-        console.log(`${enemy} Health: ${enemyHealth}`);
-
-        let options = await inquirer.prompt({
-            name: "ans",
-            type: "list",
-            message: "What would you like to do?",
-            choices: ["1. Attack", "2. Take Health Potion", "3. Run"]
-
-        })
-        
-        if(options.ans === "1. Attack"){
-            let heroAttackDamageToEnemy = 50
-          let damageToEnemy = Math.floor(Math.random() * heroAttackDamageToEnemy + 1)
-          let damageToHero = Math.floor(Math.random() * enemyAttackDamageToHero + 1)
-
-          enemyHealth -= damageToEnemy
-          heroHealth  -= damageToHero
-
-          console.log(`You strike the ${enemy} for ${damageToEnemy}`);
-          console.log(`${enemy} strike you for ${damageToHero} damage`);
-
-          if(heroHealth < 1){
-            console.log("You have taken too much damage. you are too weak to continue.");
-            break;
-          }
-        }  
-          
-        else if(options.ans === "2. Take "){
-           if(numHealthPotion > 0){
-            heroHealth += healthPotionHealAmount
-            numHealthPotion--
-
-            console.log(`you use health potion for ${healthPotionHealAmount}`);
-            console.log(`you now have ${heroHealth} health`);
-            console.log(`you have ${numHealthPotion} health potions left.`); 
-           }else{
-            console.log(`you have no health potions left. defeat enemy for a chance get health potion`);
-            
-           }
-        }
-
-        else if(options.ans === "3. Run"){
-            console.log(`you run away from ${enemy}`);
-            continue Game;
-            
-        }
+    constructor(id: string, name: string, courseEnrolled: string[], feesAmount: number){
+        this.id =id
+        this.name = name
+        this.courseEnrolled = courseEnrolled
+        this.feesAmount = feesAmount
     }
-    if(heroHealth < 1){
-        console.log(`you are out from battle. you are too weak.`);
-        break
-    }
-    console.log(`${enemy} was defeated!`);
-    console.log(`you have ${heroHealth} health.`);
-
-    let randomNumber = Math.floor(Math.random() * 100 + 1)
-    if(randomNumber < heathPotionDropChance){
-       numHealthPotion++
-
-       console.log(`enemy give you health potion`);
-       console.log(`your health is ${heroHealth}`);
-       console.log(`your health potion is ${numHealthPotion}`);
-    }
-
-    let userOption = await inquirer.prompt({
-        name: "ans",
-        type: "list",
-        message: "what would you like to do now",
-        choices: ["1. Continue", "2. Exit"]
-    })
-    if(userOption.ans === "1. Continue"){
-        console.log("you are continue on your advanture");
-    }else{
-        console.log("you successfully Exit from DeadZone");
-        break;
-    }
-    console.log("Thanks for playing.");
-    
 }
 
+let baseid = 10000
+let studentid: string = "";
+let courseEnrolled = true;
+
+let students: student[] = []
+
+do{
+    let action = await inquirer.prompt({
+  
+        name: "ans",
+        message: "Please select an option:\n",
+        type: "list",
+        choices: ["Enroll a student", "Show student Status"]
+    })
+
+    if(action.ans === "Enroll a student"){
+        let studentName = await inquirer.prompt({
+            type: "input",
+            name: "ans",
+            message: "Please Enter your name:"
+        })
+
+        let trimmedStudentName = (studentName.ans).trim().toLowerCase()
+        let studentNamesCheck = students.map(obj => obj.name)
+
+    if(studentNamesCheck.includes(trimmedStudentName) === false ){
+        
+        if(trimmedStudentName !== "" ){
+            baseid++
+            studentid = "STID" + baseid
+
+            console.log("\n\tYour account has been created");
+            console.log(`Welcome, ${trimmedStudentName}!`);
+
+            let cource = await inquirer.prompt({
+                type: "list",
+                name: "ans",
+                message: "Please select a cource",
+                choices: ["IT" , "English" , "Cooking"]
+            })
+
+            let courceFees = 0;
+            switch(cource.ans) {
+                case "IT" :
+                courceFees = 5000;
+                break;
+                
+                case "English" :
+                courceFees = 400;
+                break;
+
+                case "Cooking" :
+                courceFees = 700;
+                break;
+
+            }
+
+            let courceConfirm = await inquirer.prompt({
+                type: "confirm",
+                name: "ans",
+                message: "Do you want to enroll in this cource"
+            })
+
+            if(courceConfirm.ans === true){
+                let Student = new student(studentid, trimmedStudentName, [cource.ans], courceFees)
+
+                students.push(Student)
+
+                console.log("You have enrolled in this course");
+                
+            }
+         }else{
+            console.log("Invalid Name");
+            
+         }  
+    }else{
+        console.log("This name is already exists");
+        
+    }
+
+}
+
+else if (action.ans === "Show student status"){
+    if(students.length !== 0){
+        let studentNamesCheck = students.map(e => e.name)
+
+        let selectedStudent = await inquirer.prompt({
+            type: "list",
+            name: "ans",
+            message: "please select name",
+            choices: studentNamesCheck
+        })
+
+         let foundStudent = students.find(student => student.name === selectedStudent.ans)
+
+         console.log("Student information");
+         console.log(foundStudent);
+         console.log("\n");
+         
+         
+    }else{
+        console.log("Record is empty");
+        
+    }
+}
+
+       let userConfirm = await inquirer.prompt({
+        type: "confirm",
+        name: "ans",
+        message: "Do you want to continue?"
+       })
+
+       if(userConfirm.ans === false){
+        courseEnrolled = false
+       }
+
+}while(true)
